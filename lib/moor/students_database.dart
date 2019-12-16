@@ -22,5 +22,7 @@ class StudentsDatabase extends _$StudentsDatabase {
 
   Stream<List<Student>> getStudents() => select(students).watch();
 
-  Future addStudent(Student student)=>into(students).insert(student);
+  Future addStudent(Student student)=>into(students).insert(student); // dataProvider.addStudent(Student(name: 'sriram', id: null));
+
+  Future deleteStudent(Student student)=>delete(students).delete(student);
 }

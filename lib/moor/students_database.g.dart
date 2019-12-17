@@ -163,6 +163,17 @@ abstract class _$StudentsDatabase extends GeneratedDatabase {
   _$StudentsDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $StudentsTable _students;
   $StudentsTable get students => _students ??= $StudentsTable(this);
+  StudentsDao _studentsDao;
+  StudentsDao get studentsDao =>
+      _studentsDao ??= StudentsDao(this as StudentsDatabase);
   @override
   List<TableInfo> get allTables => [students];
+}
+
+// **************************************************************************
+// DaoGenerator
+// **************************************************************************
+
+mixin _$StudentsDaoMixin on DatabaseAccessor<StudentsDatabase> {
+  $StudentsTable get students => db.students;
 }

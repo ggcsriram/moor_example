@@ -11,7 +11,7 @@ class Students extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@UseMoor(tables: [Students])
+@UseMoor(tables: [Students], daos: [StudentsDao])
 class StudentsDatabase extends _$StudentsDatabase {
   StudentsDatabase()
       : super(FlutterQueryExecutor.inDatabaseFolder(
@@ -22,7 +22,18 @@ class StudentsDatabase extends _$StudentsDatabase {
 
   Stream<List<Student>> getStudents() => select(students).watch();
 
-  Future addStudent(Student student)=>into(students).insert(student); // dataProvider.addStudent(Student(name: 'sriram', id: null));
+  Future addStudent(Student student) => into(students).insert(student);
+  Future deleteStudent(Student student) => delete(students).delete(student);
+}
 
-  Future deleteStudent(Student student)=>delete(students).delete(student);
+@UseDao(tables: [Students])
+class StudentsDao extends DatabaseAccessor<StudentsDatabase>
+    with _$StudentsDaoMixin {
+  final StudentsDatabase sdb;
+  StudentsDao(this.sdb) : super(sdb);
+
+  Stream<List<Student>> getStudents() => select(students).watch();
+
+  Future addStudent(Student student) => into(students).insert(student);
+  Future deleteStudent(Student student) => delete(students).delete(student);
 }

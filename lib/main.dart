@@ -10,35 +10,44 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Provider(
       child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
-      ),
-      create: (BuildContext context) => StudentsDatabase(),
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: MainPage()),
+      create: (BuildContext context) => StudentsDatabase().studentsDao,
     );
   }
 }
 
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
+  Widget build(BuildContext context) {
+    print('hello');
+    return MyHomePage();
+  }
+}
+
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StudentsDatabase dataProvider;
+  StudentsDao dataProvider;
   TextEditingController nameTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    dataProvider = Provider.of<StudentsDatabase>(context);
+    print('qwerty');
+    dataProvider = Provider.of<StudentsDao>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('moor_example'),
       ),
       body: StreamBuilder<List<Student>>(
           stream: dataProvider.getStudents(),
@@ -50,9 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 return ListTile(
                   title: Text(students[index].name.toString()),
                   leading: Text(students[index].id.toString()),
-                  trailing: IconButton(icon: Icon(Icons.delete), onPressed: () {
-                    dataProvider.deleteStudent(students[index]);
-                  },),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      dataProvider.deleteStudent(students[index]);
+                    },
+                  ),
                 );
               },
             );
@@ -80,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     await dataProvider.addStudent(Student(
                         name: nameTextController.text.toString(), id: null));
-                        nameTextController.text='';
+                    nameTextController.text = '';
                     Navigator.pop(context);
                   },
                 )
